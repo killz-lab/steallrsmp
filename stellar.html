@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StellarSMP - Releasing Soon</title>
+    <style>
+        /* CSS STYLES */
+        :root {
+            --primary: #6a4cff;
+            --primary-hover: #8366ff;
+            --bg-dark: #0f111a;
+            --bg-card: #1a1d2e;
+            --text-main: #ffffff;
+            --text-muted: #8b92a5;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .container {
+            background-color: var(--bg-card);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            animation: fadeIn 1s ease-out;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #fff, #a599ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+
+        /* Countdown Timer Styles */
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .time-box {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            min-width: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .time-box span {
+            display: block;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .time-box small {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Progress Bar Styles */
+        .progress-container {
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-hover));
+            border-radius: 10px;
+            transition: width 1s ease-in-out;
+        }
+
+        .progress-text {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>StellarSMP</h1>
+        <p>Something amazing is coming. Get ready for the release.</p>
+
+        <!-- Countdown Timer -->
+        <div class="countdown" id="countdown">
+            <div class="time-box">
+                <span id="days">20</span>
+                <small>Days</small>
+            </div>
+            <div class="time-box">
+                <span id="hours">00</span>
+                <small>Hours</small>
+            </div>
+            <div class="time-box">
+                <span id="minutes">00</span>
+                <small>Mins</small>
+            </div>
+            <div class="time-box">
+                <span id="seconds">00</span>
+                <small>Secs</small>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="progress-text" id="progressText">0% Complete</div>
+    </div>
+
+    <script>
+        // JAVASCRIPT
+        
+        // Set the release date to exactly 20 days from right now
+        const releaseDate = new Date();
+        releaseDate.setDate(releaseDate.getDate() + 20);
+
+        // Calculate total duration in milliseconds (20 days)
+        const totalDuration = 20 * 24 * 60 * 60 * 1000;
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = releaseDate.getTime() - now;
+
+            // If the countdown is over
+            if (distance < 0) {
+                document.getElementById("countdown").innerHTML = "<h2>SERVER IS LIVE!</h2>";
+                document.getElementById("progressBar").style.width = "100%";
+                document.getElementById("progressText").innerText = "100% Complete";
+                return;
+            }
+
+            // Time calculations
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Display the result
+            document.getElementById("days").innerText = days.toString().padStart(2, '0');
+            document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
+            document.getElementById("minutes").innerText = minutes.toString().padStart(2, '0');
+            document.getElementById("seconds").innerText = seconds.toString().padStart(2, '0');
+
+            // Calculate Progress Bar percentage
+            // (Total Duration - Time Remaining) / Total Duration * 100
+            const timePassed = totalDuration - distance;
+            let progressPercentage = (timePassed / totalDuration) * 100;
+            
+            // Ensure it doesn't go below 0 or above 100
+            if (progressPercentage < 0) progressPercentage = 0;
+            if (progressPercentage > 100) progressPercentage = 100;
+
+            // Update Progress Bar
+            document.getElementById("progressBar").style.width = progressPercentage + "%";
+            document.getElementById("progressText").innerText = progressPercentage.toFixed(2) + "% Complete";
+        }
+
+        // Run the function immediately, then update every 1 second (1000ms)
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
+
+</body>
+</html>
